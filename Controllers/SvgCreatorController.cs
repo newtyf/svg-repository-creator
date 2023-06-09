@@ -5,6 +5,7 @@ using AngleSharp.Dom;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Octokit;
+using Octokit.Internal;
 using IConfiguration = AngleSharp.IConfiguration;
 
 namespace EmbedRepoGithub.Controllers;
@@ -43,7 +44,8 @@ public class SvgCreatorController : ControllerBase
         string languageColor = "#188601";
 
 
-        var client = new GitHubClient(new ProductHeaderValue("myapp"));
+        var tokerAuth = new Credentials(Environment.GetEnvironmentVariable("OAUTH_TOKEN_GITHUB"));
+        var client = new GitHubClient(new ProductHeaderValue("myapp"), new InMemoryCredentialStore(tokerAuth));
         string json = System.IO.File.ReadAllText("./colors.json");
         Dictionary<string, Language> colors = JsonConvert.DeserializeObject<Dictionary<string, Language>>(json)!;
         

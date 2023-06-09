@@ -16,5 +16,9 @@ RUN dotnet publish "EmbedRepoGithub.csproj" -c Release -o /app/publish /p:UseApp
 
 FROM base AS final
 WORKDIR /app
+
+ARG TOKEN
+ENV OAUTH_TOKEN_GITHUB = $TOKEN
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EmbedRepoGithub.dll"]
