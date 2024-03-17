@@ -30,7 +30,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-var url = $"{configuration["urlString:url"]}:{port}";
-
-app.Run(url);
+// var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+// var url = $"{configuration["urlString:url"]}:{port}";
+app.Run();
