@@ -21,9 +21,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="test\chrome\ChromeHeadlessShell\Win64-122.0.6261.111\chrome-headless-shell-win64\vk_swiftshader_icd.json" />
-      <_ContentIncludedByDefault Remove="test\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\MEIPreload\manifest.json" />
-      <_ContentIncludedByDefault Remove="test\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\vk_swiftshader_icd.json" />
+      <_ContentIncludedByDefault Remove="browser\chrome\ChromeHeadlessShell\Win64-122.0.6261.111\chrome-headless-shell-win64\vk_swiftshader_icd.json" />
+      <_ContentIncludedByDefault Remove="browser\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\MEIPreload\manifest.json" />
+      <_ContentIncludedByDefault Remove="browser\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\vk_swiftshader_icd.json" />
     </ItemGroup>
 
 </Project>

@@ -9,9 +9,12 @@ COPY ["EmbedRepoGithub.csproj", "./"]
 RUN dotnet restore "EmbedRepoGithub.csproj"
 COPY . .
 WORKDIR "/src/"
+RUN mkdir "storage"
 RUN dotnet build "EmbedRepoGithub.csproj" -c Release -o /app/build
 
 FROM build AS publish
+
+RUN mkdir "storage"
 RUN dotnet publish "EmbedRepoGithub.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
@@ -19,8 +22,6 @@ WORKDIR /app
 
 ARG TOKEN
 ENV OAUTH_TOKEN_GITHUB = $TOKEN
-
-RUN mkdir "storage"
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EmbedRepoGithub.dll"]
