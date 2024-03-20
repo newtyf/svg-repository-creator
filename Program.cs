@@ -45,6 +45,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => "Welcome to the api");
+
 
 // var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 // var url = $"{configuration["urlString:url"]}:{port}";

@@ -39,4 +39,9 @@ published/
 
 out.svg
 browser
-storage
+
+# ignore storage contente
+storage/*
+
+# but no storage directory
+!storage/
