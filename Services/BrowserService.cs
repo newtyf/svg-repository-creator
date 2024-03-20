@@ -10,7 +10,7 @@ public class BrowserService : IBrowserService
 
     public async Task<IBrowser?> GetBrowser()
     {
-        var options = new LaunchOptions() { Headless = true, ExecutablePath = await GetPathBrowser() };
+        var options = new LaunchOptions() { Headless = true, ExecutablePath = await GetPathBrowser(), Args = new []{"--no-sandbox"}};
         var browser = await Puppeteer.LaunchAsync(options);
         return browser;
     }
