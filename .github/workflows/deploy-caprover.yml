@@ -10,7 +10,7 @@ env:
 on:
     push:
         branches:
-            - main
+            - master
         # you can specify path if you have a monorepo and you want to deploy if particular directory is changed, make sure to update `CONTEXT_DIR` too
         # paths:
         #   - "backend-app/**"
