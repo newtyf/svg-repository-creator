@@ -3,11 +3,12 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-RUN apt-get update && apt-get -f install && apt-get -y install wget gnupg2 apt-utils
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list
-RUN apt-get update \
-&& apt-get install -y google-chrome-stable --no-install-recommends --allow-downgrades fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf
+RUN apt-get update && apt-get install gnupg wget -y && \
+  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+  apt-get update && \
+  apt-get install google-chrome-stable -y --no-install-recommends && \
+  rm -rf /var/lib/apt/lists/*
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
@@ -29,5 +30,6 @@ ARG TOKEN
 ENV OAUTH_TOKEN_GITHUB = $TOKEN
 
 RUN mkdir -p "storage"
+COPY --from=build /src/template.html .
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EmbedRepoGithub.dll"]
