@@ -28,7 +28,7 @@ public class SvgCreatorController : ControllerBase
         int page = 1;
         if (userQuery.Length == 0)
         {
-            return BadRequest("debe especificar el usuario");
+            return BadRequest("Debe especificar el usuario");
         }
 
         if (pageQuery.Length > 0)
