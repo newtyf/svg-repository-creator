@@ -3,6 +3,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+RUN sudo apt install libgirepository1.2-dev libgtk-3-dev
+
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["EmbedRepoGithub.csproj", "./"]
