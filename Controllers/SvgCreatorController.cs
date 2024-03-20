@@ -1,12 +1,7 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
-using AngleSharp;
-using AngleSharp.Dom;
+﻿using EmbedRepoGithub.Interfaces;
+using EmbedRepoGithub.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Octokit;
-using Octokit.Internal;
-using IConfiguration = AngleSharp.IConfiguration;
 
 namespace EmbedRepoGithub.Controllers;
 
@@ -15,75 +10,51 @@ namespace EmbedRepoGithub.Controllers;
 public class SvgCreatorController : ControllerBase
 {
     private readonly ILogger<SvgCreatorController> _logger;
+    private readonly IRepositoryImageService _repositoryImageService;
+    private readonly IClient _client;
 
-    public SvgCreatorController(ILogger<SvgCreatorController> logger)
+    public SvgCreatorController(ILogger<SvgCreatorController> logger, IRepositoryImageService repositoryImageService, IClient client)
     {
         _logger = logger;
+        _repositoryImageService = repositoryImageService;
+        _client = client;
     }
 
     [HttpGet(Name = "GetSvg")]
     public async Task<IActionResult> Get()
     {
-        string user = Request.Query["user"].ToString();
-        string repository = Request.Query["repository"].ToString();
-
-        if (user.Length == 0)
+        string userQuery = Request.Query["user"].ToString();
+        string pageQuery = Request.Query["page"].ToString();
+        int page = 1;
+        if (userQuery.Length == 0)
         {
             return BadRequest("debe especificar el usuario");
         }
 
-        if (repository.Length == 0)
+        if (pageQuery.Length > 0)
         {
-            return BadRequest("debe especificar el repositorio");
+            page = Int32.Parse(pageQuery);
         }
 
-        string borderColor = "#30363d";
-        string repoTitle = "Not found name";
-        string repoDescription = "Not Found description";
-        string repoLanguage = "Not found language";
-        string languageColor = "#188601";
+        User? githubUser = await _client.GetUser(userQuery);
 
+        if (githubUser == null)
+        {
+            _logger.LogError("Se envio un usuario que no existe");
+            return BadRequest("Este usuario no existe");
+        }
 
-        var tokerAuth = new Credentials(Environment.GetEnvironmentVariable("OAUTH_TOKEN_GITHUB"));
-        var client = new GitHubClient(new ProductHeaderValue("myapp"), new InMemoryCredentialStore(tokerAuth));
-        string json = System.IO.File.ReadAllText("./colors.json");
-        Dictionary<string, Language> colors = JsonConvert.DeserializeObject<Dictionary<string, Language>>(json)!;
-        
+        RepositoryImage? response;
         try
         {
-            var repo = await client.Repository.Get(user, repository);
-            repoTitle = repo.Name;
-            repoDescription = repo.Description;
-            repoLanguage = repo.Language;
-            if (colors.ContainsKey(repoLanguage))
-            {
-                languageColor = colors[repoLanguage].color;
-            }
-            
+            response = await _repositoryImageService.GetRepositoryGithubImagesAsync(githubUser.Login, page);
         }
-
         catch (NotFoundException)
         {
-            Debug.WriteLine("No se encontro el repositorio");
+            _logger.LogError("ocurrio un error al generar las imagenes");
+            return BadRequest("ocurrio un error al generar las imagenes");
         }
 
-        IConfiguration config = Configuration.Default;
-        IBrowsingContext context = BrowsingContext.New(config);
-
-        string source = "<html><body></body></html>";
-        IDocument document = await context.OpenAsync(req => req.Content(source));
-        IParentNode body = document.QuerySelector("body");
-
-        IElement repoSvg =
-            SvgRepo.Create(document, repoTitle, repoDescription, repoLanguage, languageColor, borderColor);
-        body.Append(repoSvg);
-
-        System.IO.File.WriteAllText("out.svg", document.DocumentElement.OuterHtml);
-
-        byte[] fileBytes = System.IO.File.ReadAllBytes("./out.svg");
-
-        string mimeType = "image/svg+xml";
-
-        return File(fileBytes, mimeType);
+        return Ok(response);
     }
 }

@@ -11,8 +11,19 @@
         <PackageReference Include="AngleSharp" Version="1.0.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Octokit" Version="6.0.0" />
+        <PackageReference Include="PuppeteerSharp" Version="15.0.0" />
         <PackageReference Include="Svg.Skia" Version="0.5.18" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="storage\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="test\chrome\ChromeHeadlessShell\Win64-122.0.6261.111\chrome-headless-shell-win64\vk_swiftshader_icd.json" />
+      <_ContentIncludedByDefault Remove="test\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\MEIPreload\manifest.json" />
+      <_ContentIncludedByDefault Remove="test\chrome\Chrome\Win64-122.0.6261.111\chrome-win64\vk_swiftshader_icd.json" />
     </ItemGroup>
 
 </Project>
