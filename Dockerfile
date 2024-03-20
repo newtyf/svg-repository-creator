@@ -20,5 +20,7 @@ WORKDIR /app
 ARG TOKEN
 ENV OAUTH_TOKEN_GITHUB = $TOKEN
 
+RUN mkdir "storage"
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "EmbedRepoGithub.dll"]
