@@ -38,3 +38,5 @@ published/
 .idea/
 
 out.svg
+browser
+storage
