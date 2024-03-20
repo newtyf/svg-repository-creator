@@ -7,7 +7,7 @@ namespace EmbedRepoGithub.Services;
 public class ClientService : IClient
 {
 
-    private static GitHubClient _client;
+    private static GitHubClient? _client;
     
     public ClientService()
     {
@@ -18,11 +18,11 @@ public class ClientService : IClient
 
     public async Task<IReadOnlyList<Repository>?> GetAllRepositories(string user, int page)
     {
-        var allRepos = await _client.Repository.GetAllForUser(user, new ApiOptions()
+        var allRepos = await _client?.Repository.GetAllForUser(user, new ApiOptions()
         {
             PageSize = 10,
             PageCount = page,
-        });
+        })!;
 
         return allRepos;
     }
@@ -32,10 +32,11 @@ public class ClientService : IClient
         User? githubUser;
         try
         {
-            githubUser = await _client.User.Get(user);
+            githubUser = await _client?.User.Get(user)!;
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             githubUser = null;
         }
 
