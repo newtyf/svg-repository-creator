@@ -3,7 +3,7 @@
 set -e
 
 cd $CONTEXT_DIR
-rm /tmp/build_args || echo OK
+rm /tmp/build_args || echo OKA
 env >/tmp/build_args
 echo "--build-arg \""$(cat /tmp/build_args | sed -z 's/\n/" --build-arg "/g')"IGNORE_VAR=IGNORE_VAR\"" >/tmp/build_args
 BUILD_ARGS=$(cat /tmp/build_args)
